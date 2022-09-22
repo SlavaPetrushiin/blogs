@@ -1,6 +1,9 @@
+import { createAndUpdateBlogValidator } from './../validators/blogsValidator';
+import { checkAuth } from './../utils/checkAuth';
 import { BlogsRepository } from './../repositories/blogsRepository';
 import express, {Request, Response} from 'express';
 import { ApiTypes } from '../types/types';
+import { checkError } from '../utils/checkError';
 
 export const routerBlogs = express.Router();
 
@@ -9,7 +12,7 @@ routerBlogs.get('/', (req: Request, res: Response) => {
 	res.send(blogs);
 })
 
-routerBlogs.post('/', (req: Request<{}, {}, ApiTypes.ParamsCreateAndUpdateBlog>, res: Response<ApiTypes.IBlog>) => {
+routerBlogs.post('/', checkAuth, createAndUpdateBlogValidator, checkError, (req: Request<{}, {}, ApiTypes.ParamsCreateAndUpdateBlog>, res: Response<ApiTypes.IBlog>) => {
 	let {name, youtubeUrl} = req.body;
 	let newBlog = BlogsRepository.createBlog({name, youtubeUrl});
 	res.send(newBlog);
@@ -25,7 +28,7 @@ routerBlogs.get('/:id', (req: Request<{id: string}>, res: Response) => {
 	res.send(blog);
 })
 
-routerBlogs.put('/:id', (req: Request<{id: string}, {}, ApiTypes.ParamsCreateAndUpdateBlog>, res: Response) => {
+routerBlogs.put('/:id', checkAuth, createAndUpdateBlogValidator, checkError, (req: Request<{id: string}, {}, ApiTypes.ParamsCreateAndUpdateBlog>, res: Response) => {
 	let {name, youtubeUrl} = req.body;
 	let {id} = req.params;
 	let isUpdatedBlog = BlogsRepository.updateBlog({id, name, youtubeUrl});
@@ -36,7 +39,7 @@ routerBlogs.put('/:id', (req: Request<{id: string}, {}, ApiTypes.ParamsCreateAnd
 	res.sendStatus(204);
 })
 
-routerBlogs.delete('/:id', (req: Request<{id: string}>, res: Response) => {
+routerBlogs.delete('/:id', checkAuth, (req: Request<{id: string}>, res: Response) => {
 	let {id} = req.params;
 	let isDeletesBlog = BlogsRepository.deleteBlog(id);
 	if(!isDeletesBlog){
