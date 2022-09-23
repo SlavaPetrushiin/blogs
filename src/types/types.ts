@@ -20,4 +20,6 @@ export namespace ApiTypes {
 	}
 
 	export type ParamsCreateAndUpdateBlog =  Required<Omit<ApiTypes.IBlog, 'id'>>
+	export type ParamsCreatePost =  Required<Omit<ApiTypes.IPost, 'id' | 'blogName'>>
+	export type ParamsUpdatePost =  Required<Omit<ApiTypes.IPost, 'blogName'>>
 }

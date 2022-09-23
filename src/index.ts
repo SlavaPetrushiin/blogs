@@ -1,11 +1,15 @@
+import { routerTesting } from './routers/tetstingRouter';
 import express, {Request, Response, NextFunction} from 'express';
 import { routerBlogs } from './routers/blogRouter';
+import { routerPosts } from './routers/postsRouter';
 
 const app = express();
 app.use(express.json());
 const port = process.env.PORT || 3000;
 
 app.use('/blogs', routerBlogs);
+app.use('/posts', routerPosts);
+app.use('/testing', routerTesting);
 
 app.use((req: Request, res: Response) => {
   res.type('text/plain');

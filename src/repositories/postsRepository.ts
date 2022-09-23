@@ -1,51 +1,92 @@
 import { ApiTypes } from "../types/types";
+import { BlogsRepository } from "./blogsRepository";
 
 class PostRepositoryModel {
 	private _posts: ApiTypes.IPost[];
 
 	constructor() {
-		this._posts = [];
+		this._posts = [
+			{
+				id: "1",
+				title: "I love node",
+				shortDescription: "I love node js, express",
+				content: "В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов",
+				blogId: "1", 
+				blogName: "Country"
+			}
+		];
 	}
 
-	// public getAllBlogs(): ApiTypes.IBlog[] {
-	// 	return this._blogs;
-	// }
+	public getAllPosts(): ApiTypes.IPost[] {
+		return this._posts;
+	}
 
-	// public createBlog(name: string, youtubeUrl: string): ApiTypes.IBlog {
-	// 	let newBLog: ApiTypes.IBlog = {
-	// 		id: (new Date().getMilliseconds()).toString(),
-	// 		name,
-	// 		youtubeUrl
-	// 	}
+	public createPost(params:  ApiTypes.ParamsCreatePost): ApiTypes.IPost | null {
+		let {blogId, content, shortDescription, title} = params;
+		let foundedBlog = BlogsRepository.getOneBlog(blogId);
 
-	// 	this._blogs.push(newBLog);
-	// 	return newBLog;
-	// }
+		if(!foundedBlog){
+			return null;
+		}
 
-	// public updateBlog(params: ApiTypes.IBlog) {
-	// 	let { id, name, youtubeUrl } = params;
-	// 	let foundedBlog = this._blogs.find(blog => blog.id === id);
+		let newPost: ApiTypes.IPost = {
+			id: (new Date().getMilliseconds()).toString(),
+			title,
+			shortDescription, 
+			content, 
+			blogId, 
+			blogName: foundedBlog.name
+		}
 
-	// 	if (!foundedBlog) {
-	// 		return false;
-	// 	}
+		this._posts.push(newPost);
+		return newPost;
+	}
 
-	// 	foundedBlog.name = name;
-	// 	foundedBlog.youtubeUrl = youtubeUrl;
-	// 	return true;
-	// }
+	public getOnePost(id: string): ApiTypes.IPost | null {
+		let foundedPost = this._posts.find(post => post.id === id);
 
-	// public deleteBlog(id: string): boolean {
-	// 	for (let i = 0; i < this._blogs.length; i++) {
-	// 		let blog = this._blogs[i];
-	// 		if (blog.id === id) {
-	// 			this._blogs.splice(i, 1);
-	// 			return true;
-	// 		}
-	// 	}
+		if(!foundedPost){
+			return null;
+		}
 
-	// 	return false;
-	// }
+		return foundedPost;
+	}
+
+	public updatePost(params: ApiTypes.ParamsUpdatePost,) {
+		let {title, shortDescription, content, blogId, id  } = params;
+		let foundedPost = this._posts.find(post => post.id === id);
+		let foundedBlog = BlogsRepository.getOneBlog(blogId);
+
+		if (!foundedBlog || !foundedPost) {
+			return null;
+		}
+
+		foundedPost.title = title;
+		foundedPost.shortDescription = shortDescription;
+		foundedPost.content = content;
+		foundedPost.title = title;
+		return true;
+	}
+
+	public deletePost(id: string): boolean {
+		for (let i = 0; i < this._posts.length; i++) {
+			let blog = this._posts[i];
+			if (blog.id === id) {
+				this._posts.splice(i, 1);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public removeAllPostsDeletedBlog(blogId: string){
+		this._posts = this._posts.filter(post => post.blogId != blogId);
+	}
+
+	public deleteAllBPosts(){
+		this._posts = [];		
+	}
 }
 
 export const PostsRepository = new PostRepositoryModel();

@@ -63,6 +63,10 @@ class BlogsRepositoryModel {
 
 		return false;
 	}
+
+	public deleteAllBlogs(){
+		this._blogs = [];		
+	}
 }
 
 export const BlogsRepository = new BlogsRepositoryModel();
