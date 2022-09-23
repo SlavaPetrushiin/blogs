@@ -16,7 +16,7 @@ routerBlogs.get('/', async (req: Request, res: Response) => {
 routerBlogs.post('/', checkAuth, createAndUpdateBlogValidator, checkError, async (req: Request<{}, {}, ApiTypes.ParamsCreateAndUpdateBlog>, res: Response<ApiTypes.IBlog>) => {
 	let {name, youtubeUrl} = req.body;
 	let newBlog = BlogsRepository.createBlog({name, youtubeUrl});
-	res.send(newBlog);
+	res.status(201).send(newBlog);
 })
 
 routerBlogs.get('/:id', async (req: Request<{id: string}>, res: Response) => {
