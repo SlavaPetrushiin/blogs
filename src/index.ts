@@ -7,8 +7,8 @@ const app = express();
 app.use(express.json());
 const port = process.env.PORT || 3000;
 
-app.use('/blogs', routerBlogs);
 app.use('/posts', routerPosts);
+app.use('/blogs', routerBlogs);
 app.use('/testing', routerTesting);
 
 app.use((req: Request, res: Response) => {
