@@ -6,7 +6,7 @@ function checkUrl(url: string){
 }
 
 export const createAndUpdateBlogValidator = [
-	body("name").isString().isLength({max: 15}).withMessage("Укажите имя"),
-	body("youtubeUrl").isString().isLength({max: 100}).custom(checkUrl).withMessage("Укажите валидную ссылку"),
+	body("name").isString().trim().isLength({min: 1, max: 15}).withMessage("Укажите имя"),
+	body("youtubeUrl").isString().trim().isLength({max: 100}).custom(checkUrl).withMessage("Укажите валидную ссылку"),
 ];
 
