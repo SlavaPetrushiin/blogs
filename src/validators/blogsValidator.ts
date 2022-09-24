@@ -1,6 +1,6 @@
-import { body, param } from "express-validator";
+import { body, CustomValidator } from "express-validator";
 
-function checkUrl(url: string){
+const  checkUrl: CustomValidator =(url: string) => {
 	let pattern = new RegExp('^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');
 	return pattern.test(url);
 }

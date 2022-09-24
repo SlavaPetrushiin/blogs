@@ -1,7 +1,7 @@
 import { BlogsRepository } from './../repositories/blogsRepository';
-import { body } from "express-validator";
+import { body, CustomValidator  } from "express-validator";
 
-function checkBlogID(blogId: string){
+const checkBlogID: CustomValidator = (blogId: string) =>{
 	let foundedBlog = BlogsRepository.getOneBlog(blogId);
 	if(!foundedBlog){
 		return false;

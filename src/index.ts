@@ -1,7 +1,7 @@
-import { routerTesting } from './routers/tetstingRouter';
 import express, {Request, Response, NextFunction} from 'express';
 import { routerBlogs } from './routers/blogRouter';
 import { routerPosts } from './routers/postsRouter';
+import { routerTesting } from './routers/tetstingRouter';
 
 const app = express();
 app.use(express.json());
