@@ -6,11 +6,14 @@ export const checkAuth = (req: Request, res: Response, next: NextFunction) => {
 	if (!req.headers.authorization) {
 		res.sendStatus(401);
 	}
-
+	let typeAuth = req.headers.authorization!.split(" ")[0] || "";
 	let params = req.headers.authorization!.split(" ")[1] || "";
-	let [name, password] = Buffer.from(params, 'base64').toString().split(':');
 
-	if (name === credentials.secretName && password === credentials.secretPassword) {
+	let [name, password] = Buffer.from(params, 'base64').toString().split(':');
+	
+
+
+	if (typeAuth == 'Basic' && name === credentials.secretName && password === credentials.secretPassword) {
 		return next();
 	}
 
