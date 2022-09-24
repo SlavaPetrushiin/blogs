@@ -19,7 +19,7 @@ routerPosts.post('/', checkAuth, createAndUpdatePostsValidator, checkError, asyn
 	if(!newPost){
 		return res.sendStatus(404);
 	}
-	res.send(newPost);
+	res.status(201).send(newPost);
 })
 
 routerPosts.get('/:id', async (req: Request<{id: string}>, res: Response<ApiTypes.IPost>) => {
