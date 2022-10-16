@@ -1,10 +1,6 @@
-import { BlogsRepository } from './../repositories/blogsRepository';
-import { PostsRepository } from './../repositories/postsRepository';
-import { checkAuth } from '../utils/checkAuth';
+import { BlogsRepository } from '../repositories/blogs-in-memory-repository';
+import { PostsRepository } from '../repositories/posts-in-memory-repository';
 import express, {Request, Response} from 'express';
-import { ApiTypes } from '../types/types';
-import { checkError } from '../utils/checkError';
-import { createAndUpdatePostsValidator } from '../validators/postsValidator';
 
 export const routerTesting = express.Router();
 

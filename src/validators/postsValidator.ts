@@ -1,4 +1,4 @@
-import { BlogsRepository } from './../repositories/blogsRepository';
+import { BlogsRepository } from '../repositories/blogs-in-memory-repository';
 import { body, CustomValidator  } from "express-validator";
 
 const checkBlogID: CustomValidator = (blogId: string) =>{

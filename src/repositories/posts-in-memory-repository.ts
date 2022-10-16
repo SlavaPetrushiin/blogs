@@ -1,5 +1,5 @@
 import { ApiTypes } from "../types/types";
-import { BlogsRepository } from "./blogsRepository";
+import { BlogsRepository } from "./blogs-in-memory-repository";
 
 class PostRepositoryModel {
 	private _posts: ApiTypes.IPost[];
@@ -17,13 +17,13 @@ class PostRepositoryModel {
 		];
 	}
 
-	public getAllPosts(): ApiTypes.IPost[] {
+	public async getAllPosts(): Promise<ApiTypes.IPost[]> {
 		return this._posts;
 	}
 
-	public createPost(params:  ApiTypes.ParamsCreatePost): ApiTypes.IPost | null {
+	public async createPost(params:  ApiTypes.ParamsCreatePost): Promise<ApiTypes.IPost | null> {
 		let {blogId, content, shortDescription, title} = params;
-		let foundedBlog = BlogsRepository.getOneBlog(blogId);
+		let foundedBlog = await BlogsRepository.getOneBlog(blogId);
 
 		if(!foundedBlog){
 			return null;
@@ -42,7 +42,7 @@ class PostRepositoryModel {
 		return newPost;
 	}
 
-	public getOnePost(id: string): ApiTypes.IPost | null {
+	public async getOnePost(id: string): Promise<ApiTypes.IPost | null> {
 		let foundedPost = this._posts.find(post => post.id === id);
 
 		if(!foundedPost){
@@ -52,7 +52,7 @@ class PostRepositoryModel {
 		return foundedPost;
 	}
 
-	public updatePost(params: ApiTypes.ParamsUpdatePost,) {
+	public async updatePost(params: ApiTypes.ParamsUpdatePost,): Promise<boolean | null> {
 		let {title, shortDescription, content, blogId, id  } = params;
 		let foundedPost = this._posts.find(post => post.id === id);
 		let foundedBlog = BlogsRepository.getOneBlog(blogId);
@@ -68,7 +68,7 @@ class PostRepositoryModel {
 		return true;
 	}
 
-	public deletePost(id: string): boolean {
+	public async deletePost(id: string): Promise<boolean> {
 		for (let i = 0; i < this._posts.length; i++) {
 			let blog = this._posts[i];
 			if (blog.id === id) {
@@ -80,11 +80,11 @@ class PostRepositoryModel {
 		return false;
 	}
 
-	public removeAllPostsDeletedBlog(blogId: string){
+	public async removeAllPostsDeletedBlog(blogId: string): Promise<void>{
 		this._posts = this._posts.filter(post => post.blogId != blogId);
 	}
 
-	public deleteAllBPosts(){
+	public async deleteAllBPosts(): Promise<void> {
 		this._posts = [];		
 	}
 }

@@ -1,4 +1,5 @@
 import express, {Request, Response, NextFunction} from 'express';
+import { runDB } from './repositories/db';
 import { routerBlogs } from './routers/blogRouter';
 import { routerPosts } from './routers/postsRouter';
 import { routerTesting } from './routers/tetstingRouter';
@@ -24,7 +25,14 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.send('500 - Ошибка сервера');
 })
 
+const startApp =async () => {
+  await runDB();
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-})
+  app.listen(port, async () => {
+    console.log(`Example app listening on port ${port}`);
+  })
+}
+
+startApp();
+
+

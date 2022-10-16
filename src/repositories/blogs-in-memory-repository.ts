@@ -13,11 +13,11 @@ class BlogsRepositoryModel {
 		];
 	}
 
-	public getAllBlogs(): ApiTypes.IBlog[] {
+	public async getAllBlogs(): Promise<ApiTypes.IBlog[]> {
 		return this._blogs;
 	}
 
-	public getOneBlog(id: string): ApiTypes.IBlog | null {
+	public async getOneBlog(id: string): Promise<ApiTypes.IBlog | null> {
 		let foundedBlog = this._blogs.find(blog => blog.id === id);
 
 		if(foundedBlog){
@@ -27,7 +27,7 @@ class BlogsRepositoryModel {
 		return null;
 	}
 
-	public createBlog(params: ApiTypes.ParamsCreateAndUpdateBlog): ApiTypes.IBlog {
+	public async createBlog(params: ApiTypes.ParamsCreateAndUpdateBlog): Promise<ApiTypes.IBlog> {
 		let {name, youtubeUrl} = params;
 		let newBLog: ApiTypes.IBlog = {
 			id: (new Date().getMilliseconds()).toString(),
@@ -39,7 +39,7 @@ class BlogsRepositoryModel {
 		return newBLog;
 	}
 
-	public updateBlog(params: Required<ApiTypes.IBlog> ) {
+	public async updateBlog(params: Required<ApiTypes.IBlog> ): Promise<boolean> {
 		let { id, name, youtubeUrl } = params;
 		let foundedBlog = this._blogs.find(blog => blog.id === id);
 
@@ -52,7 +52,7 @@ class BlogsRepositoryModel {
 		return true;
 	}
 
-	public deleteBlog(id: string): boolean {
+	public async deleteBlog(id: string): Promise<boolean> {
 		for (let i = 0; i < this._blogs.length; i++) {
 			let blog = this._blogs[i];
 			if (blog.id === id) {
@@ -64,7 +64,7 @@ class BlogsRepositoryModel {
 		return false;
 	}
 
-	public deleteAllBlogs(){
+	public async deleteAllBlogs(){
 		this._blogs = [];		
 	}
 }
