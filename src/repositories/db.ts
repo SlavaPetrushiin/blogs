@@ -14,5 +14,4 @@ export async function runDB(){
 		console.error(error);
 		//await client.close();
 	}
-
 }

@@ -1,10 +1,10 @@
 import { createAndUpdateBlogValidator } from './../validators/blogsValidator';
 import { checkAuth } from './../utils/checkAuth';
-import { BlogsRepository } from '../repositories/blogs-db-repository';
+import { BlogsRepository } from '../repositories/blogs-in-memory-repository';
 import express, {Request, Response} from 'express';
 import { ApiTypes } from '../types/types';
 import { checkError } from '../utils/checkError';
-import { PostsRepository } from '../repositories/posts-db-repository';
+import { PostsRepository } from '../repositories/posts-in-memory-repository';
 
 export const routerBlogs = express.Router();
 

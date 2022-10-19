@@ -39,7 +39,7 @@ class BlogsRepositoryModel {
 		return newBLog;
 	}
 
-	public async updateBlog(params: Required<ApiTypes.IBlog> ): Promise<boolean> {
+	public async updateBlog(params: ApiTypes.IBlog ): Promise<boolean> {
 		let { id, name, youtubeUrl } = params;
 		let foundedBlog = this._blogs.find(blog => blog.id === id);
 
