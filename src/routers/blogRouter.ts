@@ -1,10 +1,10 @@
 import { createAndUpdateBlogValidator } from './../validators/blogsValidator';
 import { checkAuth } from './../utils/checkAuth';
-import { BlogsRepository } from '../repositories/blogs-in-memory-repository';
+import { BlogsRepository } from '../repositories/blogs-db-repository';
 import express, {Request, Response} from 'express';
 import { ApiTypes } from '../types/types';
 import { checkError } from '../utils/checkError';
-import { PostsRepository } from '../repositories/posts-in-memory-repository';
+import { PostsRepository } from '../repositories/posts-db-repository';
 
 export const routerBlogs = express.Router();
 
@@ -15,8 +15,9 @@ routerBlogs.get('/', async (req: Request, res: Response) => {
 
 routerBlogs.post('/', checkAuth, createAndUpdateBlogValidator, checkError, async (req: Request<{}, {}, ApiTypes.ParamsCreateAndUpdateBlog>, res: Response<ApiTypes.IBlog | null>) => {
 	let {name, youtubeUrl} = req.body;
-	let newBlog = await BlogsRepository.createBlog({name, youtubeUrl});
-	res.status(201).send(newBlog);
+	let newBlog = await BlogsRepository.createBlog(name, youtubeUrl);
+	if (!newBlog) return res.sendStatus(400);
+	return res.status(201).send(newBlog);
 })
 
 routerBlogs.get('/:id', async (req: Request<{id: string}>, res: Response) => {
