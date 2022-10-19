@@ -60,8 +60,8 @@ class BlogsRepositoryModel {
 
 	public async deleteBlog(id: string): Promise<boolean> {
 		try {
-			let result = await blogsCollection.deleteOne({id});
-			return result.acknowledged ? true : false;
+			let res = await blogsCollection.deleteOne({id});
+			return res.deletedCount > 0 ? true : false;
 		} catch (error) {
 			console.error(error);
 			return false;

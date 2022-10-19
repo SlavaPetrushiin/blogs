@@ -77,7 +77,7 @@ class PostRepositoryModel {
 	public async deletePost(id: string): Promise<boolean> {
 		try {
 			let result = await db.collection<ApiTypes.IPost>("posts").deleteOne({id});
-			return result.acknowledged;
+			return result.deletedCount > 0 ? true : false;
 		} catch (error) {
 			return false;
 		}
