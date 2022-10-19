@@ -12,13 +12,11 @@ class BlogsRepositoryModel {
 
 	public async getOneBlog(id: string): Promise<ApiTypes.IBlog | null> {
 		try {
-			let foundedBlog = await blogsCollection.findOne({id});
+			const foundedBlog = await blogsCollection.findOne({id}, {projection: {_id: false, createdAt: false}});
 
-			if(foundedBlog){
-				return foundedBlog;
-			}
+			if (!foundedBlog) return null
 	
-			return null;
+			return foundedBlog;
 		} catch (error) {
 			console.error(error);
 			return null;
@@ -34,7 +32,7 @@ class BlogsRepositoryModel {
 				createdAt: new Date().toString()
 			}
 	
-			await blogsCollection.insertOne(newBLog);
+			await blogsCollection.insertOne({...newBLog});
 			return newBLog
 			
 		} catch (error) {

@@ -27,7 +27,7 @@ routerBlogs.get('/:id', async (req: Request<{id: string}>, res: Response) => {
 		return res.sendStatus(404);
 	}
 
-	res.send(blog);
+	return res.send(blog);
 })
 
 routerBlogs.put('/:id', checkAuth, createAndUpdateBlogValidator, checkError, async (req: Request<{id: string}, {}, ApiTypes.ParamsCreateAndUpdateBlog>, res: Response) => {
