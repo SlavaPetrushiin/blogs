@@ -4,7 +4,7 @@ import { db } from "./db";
 
 class PostRepositoryModel {
 	public async getAllPosts(): Promise<ApiTypes.IPost[]> {
-		return db.collection<ApiTypes.IPost>("posts").find({}).toArray();
+		return db.collection<ApiTypes.IPost>("posts").find({}, {projection: {_id: false}}).toArray();
 	}
 
 	public async createPost(params: ApiTypes.ParamsCreatePost): Promise<ApiTypes.IPost | null> {
@@ -28,7 +28,7 @@ class PostRepositoryModel {
 			let result = await db.collection<ApiTypes.IPost>("posts").insertOne(newPost);
 
 			if (result.acknowledged) {
-				let post = await db.collection<ApiTypes.IPost>("posts").findOne({ id: newPost.id });
+				let post = await db.collection<ApiTypes.IPost>("posts").findOne({ id: newPost.id }, {projection: {_id: false}});
 				return !!post ? post : null;
 			}
 
@@ -41,7 +41,7 @@ class PostRepositoryModel {
 
 	public async getOnePost(id: string): Promise<ApiTypes.IPost | null> {
 		try {
-			let foundedPost = await db.collection<ApiTypes.IPost>("posts").findOne({id});
+			let foundedPost = await db.collection<ApiTypes.IPost>("posts").findOne({id}, {projection: {_id: false}});
 
 			if (!foundedPost) {
 				return null;
