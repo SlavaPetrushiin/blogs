@@ -3,7 +3,7 @@ import { blogsCollection } from "./db";
 class BlogsRepositoryModel {
 	public async getAllBlogs(): Promise<ApiTypes.IBlog[] | null> {
 		try {
-			return blogsCollection.find({}).toArray();
+			return blogsCollection.find({}, {projection: {_id: false, createdAt: false}} ).toArray();
 		} catch (error) {
 			console.error(error);
 			return null;
@@ -33,13 +33,12 @@ class BlogsRepositoryModel {
 			}
 	
 			await blogsCollection.insertOne({...newBLog});
-			return newBLog
+			return {id: newBLog.id ,name: newBLog.name, youtubeUrl: newBLog.youtubeUrl};
 			
 		} catch (error) {
 			console.error(error);
 			return null;
 		}
-
 	}
 
 	public async updateBlog(newBlog: ApiTypes.IBlog ): Promise<boolean> {
