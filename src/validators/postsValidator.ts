@@ -1,8 +1,8 @@
-import { BlogsRepository } from '../repositories/blogs-in-memory-repository';
+import { BlogsRepository } from '../repositories/blogs-db-repository';
 import { body, CustomValidator  } from "express-validator";
 
-const checkBlogID: CustomValidator = (blogId: string) =>{
-	let foundedBlog = BlogsRepository.getOneBlog(blogId);
+const checkBlogID: CustomValidator = async (blogId: string) =>{
+	let foundedBlog = await BlogsRepository.getOneBlog(blogId);
 	if(!foundedBlog){
 		return false;
 	}

@@ -44,13 +44,9 @@ class BlogsRepositoryModel {
 	public async updateBlog(newBlog: ApiTypes.IBlog ): Promise<boolean> {
 		try {
 			let {id, name, youtubeUrl} = newBlog;
-			let result = await blogsCollection.updateOne({id}, {
+			await blogsCollection.updateOne({id}, {
 				$set: {name,  youtubeUrl}
 			});
-	
-			if (result.matchedCount == 0) {
-				return false;
-			}	
 			return true;
 		} catch (error) {
 			console.error(error);
