@@ -8,6 +8,7 @@ const dbName = "blogsAndPosts";
 export const db = client.db(dbName);
 
 export const blogsCollection = db.collection<ApiTypes.IBlog>("blogs");
+export const postsCollection = db.collection<ApiTypes.IPost>("posts");
 
 export async function runDB(){
 	try {

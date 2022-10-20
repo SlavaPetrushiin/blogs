@@ -1,10 +1,10 @@
 import { ApiTypes } from "../types/types";
 import { BlogsRepository } from "./blogs-db-repository";
-import { db } from "./db";
+import { db, postsCollection } from "./db";
 
 class PostRepositoryModel {
 	public async getAllPosts(): Promise<ApiTypes.IPost[]> {
-		return db.collection<ApiTypes.IPost>("posts").find({}, {projection: {_id: false}}).toArray();
+		return postsCollection.find({}, {projection: {_id: false}}).toArray();
 	}
 
 	public async createPost(params: ApiTypes.ParamsCreatePost): Promise<ApiTypes.IPost | null> {
@@ -25,10 +25,10 @@ class PostRepositoryModel {
 				blogName: foundedBlog.name
 			}
 
-			let result = await db.collection<ApiTypes.IPost>("posts").insertOne(newPost);
+			let result = await postsCollection.insertOne(newPost);
 
 			if (result.acknowledged) {
-				let post = await db.collection<ApiTypes.IPost>("posts").findOne({ id: newPost.id }, {projection: {_id: false}});
+				let post = await postsCollection.findOne({ id: newPost.id }, {projection: {_id: false}});
 				return !!post ? post : null;
 			}
 
@@ -41,7 +41,7 @@ class PostRepositoryModel {
 
 	public async getOnePost(id: string): Promise<ApiTypes.IPost | null> {
 		try {
-			let foundedPost = await db.collection<ApiTypes.IPost>("posts").findOne({id}, {projection: {_id: false}});
+			let foundedPost = await postsCollection.findOne({id}, {projection: {_id: false}});
 
 			if (!foundedPost) {
 				return null;
@@ -57,16 +57,17 @@ class PostRepositoryModel {
 	public async updatePost(params: ApiTypes.ParamsUpdatePost,): Promise<boolean | null> {
 		try {
 			let { title, shortDescription, content, blogId, id } = params;
-			let foundedPost = await db.collection<ApiTypes.IPost>("posts").findOne({id});
+			let foundedPost = await postsCollection.findOne({id});
 			let foundedBlog = await BlogsRepository.getOneBlog(blogId);
 	
+			console.log(foundedPost);
+			console.log(foundedBlog);
+
 			if (!foundedBlog || !foundedPost) {
 				return null;
 			}
 
-			let result = await db.collection<ApiTypes.IPost>("posts").updateOne({id}, {
-				title, shortDescription, content
-			})
+			let result = await postsCollection.updateOne({id}, {$set: {title, shortDescription, content}})
 			return result.matchedCount > 0 ? true : null;
 		} catch (error) {
 			console.error(error);
@@ -76,7 +77,7 @@ class PostRepositoryModel {
 
 	public async deletePost(id: string): Promise<boolean> {
 		try {
-			let result = await db.collection<ApiTypes.IPost>("posts").deleteOne({id});
+			let result = await postsCollection.deleteOne({id});
 			return result.deletedCount > 0 ? true : false;
 		} catch (error) {
 			return false;
@@ -84,11 +85,11 @@ class PostRepositoryModel {
 	}
 
 	public async removeAllPostsDeletedBlog(blogId: string): Promise<void> {
-		await db.collection<ApiTypes.IPost>("posts").deleteMany({blogId})
+		await postsCollection.deleteMany({blogId})
 	}
 
 	public async deleteAllBPosts(): Promise<void> {
-		await db.collection<ApiTypes.IPost>("posts").deleteMany({})
+		await postsCollection.deleteMany({})
 	}
 }
 
