@@ -1,11 +1,12 @@
-import { BlogsRepository } from '../repositories/blogs-in-memory-repository';
-import { PostsRepository } from '../repositories/posts-in-memory-repository';
+import { db } from './../repositories/db';
+import { BlogsRepository } from '../repositories/blogs-db-repository';
+import { PostsRepository } from '../repositories/posts-db-repository';
 import express, {Request, Response} from 'express';
 
 export const routerTesting = express.Router();
 
 routerTesting.delete('/all-data', async (req: Request, res: Response) => {
-	BlogsRepository.deleteAllBlogs();
-	PostsRepository.deleteAllBPosts();
+	await BlogsRepository.deleteAllBlogs();
+	await PostsRepository.deleteAllBPosts();
 	res.sendStatus(204);
 })
