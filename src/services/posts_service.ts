@@ -1,13 +1,18 @@
+import { createAndUpdateBlogValidator } from './../validators/blogsValidator';
 import { PostsRepository } from './../repositories/posts-db-repository';
 import { ApiTypes } from "../types/types";
 import { BlogsService } from './blogs_service';
+
+export interface IUpdatePostParams extends ApiTypes.ICreateAndUpdateBlogParams {
+	id: string
+}
 
 export class PostService {
 	static async getAllPosts(): Promise<ApiTypes.IPost[]> {
 		return PostsRepository.getAllPosts();
 	}
 
-	static async createPost(params: ApiTypes.ParamsCreatePost): Promise<ApiTypes.IPost | boolean> {
+	static async createPost(params: ApiTypes.ICreateAndUpdateBlogParams): Promise<ApiTypes.IPost | boolean> {
 		try {
 			let { blogId, content, shortDescription, title } = params;
 			let foundedBlog = await BlogsService.getOneBlog(blogId);
@@ -37,7 +42,7 @@ export class PostService {
 		return PostsRepository.getOnePost(id);
 	}
 
-	static async updatePost(params: ApiTypes.ParamsUpdatePost,): Promise<boolean> {
+	static async updatePost(params: IUpdatePostParams): Promise<boolean> {
 		try {
 			let { blogId, id } = params;
 			let foundedPost = await PostService.getOnePost(id);

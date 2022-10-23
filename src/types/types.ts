@@ -3,7 +3,7 @@ export namespace ApiTypes {
 		id: string;
 		name: string;
 		youtubeUrl: string;
-		createdAt?: string;
+		createdAt: string;
 	}
 
 	export interface IPost {
@@ -24,4 +24,11 @@ export namespace ApiTypes {
 	export type ParamsCreateAndUpdateBlog =  Omit<ApiTypes.IBlog, 'id'>
 	export type ParamsCreatePost =  Omit<ApiTypes.IPost, 'id' | 'blogName'>
 	export type ParamsUpdatePost =  Omit<ApiTypes.IPost, 'blogName'>
+
+	export interface ICreateAndUpdateBlogParams {
+		title: string;
+		shortDescription: string;
+		content: string;
+		blogId: string;
+	}
 }

@@ -20,7 +20,7 @@ export class BlogsService {
 			}
 
 			let result = await BlogsRepository.createBlog(newBLog);
-			return result ? {id: newBLog.id ,name: newBLog.name, youtubeUrl: newBLog.youtubeUrl} : false;
+			return result ? newBLog : false;
 			
 		} catch (error) {
 			console.error(error);

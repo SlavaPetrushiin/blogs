@@ -1,3 +1,4 @@
+import { IUpdatePostParams } from "../services/posts_service";
 import { ApiTypes } from "../types/types";
 import { BlogsRepository } from "./blogs-db-repository";
 import { db, postsCollection } from "./db";
@@ -38,7 +39,7 @@ class PostRepositoryModel {
 		}
 	}
 
-	public async updatePost(params: ApiTypes.ParamsUpdatePost,): Promise<boolean> {
+	public async updatePost(params: IUpdatePostParams): Promise<boolean> {
 		try {
 			let { title, shortDescription, content, id } = params;
 			let result = await postsCollection.updateOne({id}, {$set: {title, shortDescription, content}});

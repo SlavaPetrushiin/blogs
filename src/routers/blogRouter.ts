@@ -32,9 +32,9 @@ routerBlogs.get('/:id', async (req: Request<{id: string}>, res: Response) => {
 })
 
 routerBlogs.put('/:id', checkAuth, createAndUpdateBlogValidator, checkError, async (req: Request<{id: string}, {}, ApiTypes.ParamsCreateAndUpdateBlog>, res: Response) => {
-	let {name, youtubeUrl} = req.body;
+	let {name, youtubeUrl, createdAt} = req.body;
 	let {id} = req.params;
-	let isUpdatedBlog = await BlogsService.updateBlog({id, name, youtubeUrl});
+	let isUpdatedBlog = await BlogsService.updateBlog({id, name, youtubeUrl, createdAt});
 	if(!isUpdatedBlog){
 		return res.sendStatus(404);
 	}
