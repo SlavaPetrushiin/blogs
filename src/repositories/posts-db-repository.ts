@@ -5,7 +5,7 @@ import { db, postsCollection } from "./db";
 
 class PostRepositoryModel {
 	public async getAllPosts(): Promise<ApiTypes.IPost[]> {
-		return postsCollection.find({}, {projection: {_id: false}}).toArray();
+		return postsCollection.find({}).toArray();
 	}
 
 	public async createPost(post: ApiTypes.IPost): Promise<ApiTypes.IPost | boolean> {
@@ -13,7 +13,7 @@ class PostRepositoryModel {
 			let result = await postsCollection.insertOne(post);
 
 			if (result.acknowledged) {
-				let createdPost = await postsCollection.findOne({ id: post.id }, {projection: {_id: false}});
+				let createdPost = await postsCollection.findOne({ id: post.id });
 				return !!createdPost ? createdPost : false;
 			}
 
