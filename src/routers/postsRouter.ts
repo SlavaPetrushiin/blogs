@@ -14,8 +14,8 @@ routerPosts.get('/', async (req: Request, res: Response) => {
 })
 
 routerPosts.post('/', checkAuth, createAndUpdatePostsValidator, checkError, async (req: Request<{}, {}, ApiTypes.ParamsCreatePost>, res: Response<ApiTypes.IPost | boolean>) => {
-	let {blogId, content, shortDescription, title} = req.body;
-	let newPost = await PostService.createPost({blogId, content, shortDescription, title});
+	let {blogId, content, shortDescription, title, createdAt} = req.body;
+	let newPost = await PostService.createPost({blogId, content, shortDescription, title, createdAt});
 
 	if(!newPost){
 		return res.sendStatus(404);
@@ -34,9 +34,9 @@ routerPosts.get('/:id', async (req: Request<{id: string}>, res: Response<ApiType
 })
 
 routerPosts.put('/:id', checkAuth, createAndUpdatePostsValidator, checkError, async (req: Request<{id: string}, {}, Omit<ApiTypes.ParamsUpdatePost, 'id'>>, res: Response) => {
-	let {blogId,content, shortDescription, title} = req.body;
+	let {blogId,content, shortDescription, title, createdAt} = req.body;
 	let {id} = req.params;
-	let isUpdatedBPost = await PostService.updatePost({id, blogId, content, shortDescription, title});
+	let isUpdatedBPost = await PostService.updatePost({id, blogId, content, shortDescription, title, createdAt});
 	if(!isUpdatedBPost){
 		return res.sendStatus(404);
 	}
