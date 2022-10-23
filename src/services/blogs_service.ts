@@ -16,7 +16,7 @@ export class BlogsService {
 				id: (new Date().getMilliseconds()).toString(),
 				name,
 				youtubeUrl,
-				createdAt: new Date().toString()
+				createdAt: new Date().toISOString()
 			}
 
 			let result = await BlogsRepository.createBlog(newBLog);

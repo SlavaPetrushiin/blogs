@@ -23,7 +23,7 @@ export class PostService {
 				content,
 				blogId,
 				blogName: foundedBlog.name,
-				createdAt: (new Date().getMilliseconds()).toString()
+				createdAt: new Date().toISOString()
 			}
 
 			return await PostsRepository.createPost(newPost);
