@@ -23,27 +23,19 @@ class BlogsRepositoryModel {
 		}
 	}
 
-	public async createBlog(name: string, youtubeUrl: string): Promise<ApiTypes.IBlog | null> {
+	public async createBlog(blog: ApiTypes.IBlog ): Promise<boolean> {
 		try {
-			const newBLog: ApiTypes.IBlog = {
-				id: (new Date().getMilliseconds()).toString(),
-				name,
-				youtubeUrl,
-				createdAt: new Date().toString()
-			}
-	
-			await blogsCollection.insertOne({...newBLog});
-			return {id: newBLog.id ,name: newBLog.name, youtubeUrl: newBLog.youtubeUrl};
-			
+			let result = await blogsCollection.insertOne(blog);
+			return result.acknowledged;			
 		} catch (error) {
 			console.error(error);
-			return null;
+			return false;
 		}
 	}
 
-	public async updateBlog(newBlog: ApiTypes.IBlog ): Promise<boolean> {
+	public async updateBlog(blog: ApiTypes.IBlog ): Promise<boolean> {
 		try {
-			let {id, name, youtubeUrl} = newBlog;
+			let {id, name, youtubeUrl} = blog;
 			let result = await blogsCollection.updateOne({id}, {
 				$set: {name,  youtubeUrl}
 			});
