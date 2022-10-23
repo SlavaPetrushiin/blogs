@@ -3,7 +3,7 @@ import { blogsCollection } from "./db";
 class BlogsRepositoryModel {
 	public async getAllBlogs(): Promise<ApiTypes.IBlog[] | null> {
 		try {
-			return blogsCollection.find({}, {projection: {_id: false, createdAt: false}} ).toArray();
+			return blogsCollection.find({}, {projection: {_id: false}} ).toArray();
 		} catch (error) {
 			console.error(error);
 			return null;
@@ -12,7 +12,7 @@ class BlogsRepositoryModel {
 
 	public async getOneBlog(id: string): Promise<ApiTypes.IBlog | null> {
 		try {
-			const foundedBlog = await blogsCollection.findOne({id}, {projection: {_id: false, createdAt: false}});
+			const foundedBlog = await blogsCollection.findOne({id}, {projection: {_id: false}});
 
 			if (!foundedBlog) return null
 	

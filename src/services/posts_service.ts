@@ -22,7 +22,8 @@ export class PostService {
 				shortDescription,
 				content,
 				blogId,
-				blogName: foundedBlog.name
+				blogName: foundedBlog.name,
+				createdAt: (new Date().getMilliseconds()).toString()
 			}
 
 			return await PostsRepository.createPost(newPost);

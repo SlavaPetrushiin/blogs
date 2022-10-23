@@ -13,6 +13,7 @@ export namespace ApiTypes {
 		content: string;
 		blogId: string;
 		blogName: string;
+		createdAt: string;
 	}
 
 	export interface IFieldError{
