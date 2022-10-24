@@ -3,21 +3,16 @@ import { ApiTypes } from "../types/types";
 import { BlogsRepository } from "./blogs-db-repository";
 import { db, postsCollection } from "./db";
 
+const defaultProjection =  {_id: false};
 class PostRepositoryModel {
 	public async getAllPosts(): Promise<ApiTypes.IPost[]> {
-		return postsCollection.find({}).toArray();
+		return postsCollection.find({}, {projection: {...defaultProjection}}).toArray();
 	}
 
 	public async createPost(post: ApiTypes.IPost): Promise<ApiTypes.IPost | boolean> {
 		try {
 			let result = await postsCollection.insertOne(post);
-
-			if (result.acknowledged) {
-				let createdPost = await postsCollection.findOne({ id: post.id });
-				return !!createdPost ? createdPost : false;
-			}
-
-			return false;
+			return result.acknowledged;
 		} catch (error) {
 			console.error(error);
 			return false;
@@ -26,7 +21,7 @@ class PostRepositoryModel {
 
 	public async getOnePost(id: string): Promise<ApiTypes.IPost | boolean> {
 		try {
-			let foundedPost = await postsCollection.findOne({id}, {projection: {_id: false}});
+			let foundedPost = await postsCollection.findOne({id}, {projection:{...defaultProjection}});
 
 			if (!foundedPost) {
 				return false;

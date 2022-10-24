@@ -31,7 +31,11 @@ export class PostService {
 				createdAt: new Date().toISOString()
 			}
 
-			return await PostsRepository.createPost(newPost);
+		  const result = await PostsRepository.createPost({...newPost});
+
+			if (!result) return false;
+			return newPost;
+
 		} catch (error) {
 			console.error(error);
 			return false;
