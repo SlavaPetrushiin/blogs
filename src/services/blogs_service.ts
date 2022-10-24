@@ -19,7 +19,7 @@ export class BlogsService {
 				createdAt: new Date().toISOString()
 			}
 
-			let result = await BlogsRepository.createBlog(newBLog);
+			let result = await BlogsRepository.createBlog({...newBLog});
 			return result ? newBLog : false;
 			
 		} catch (error) {
