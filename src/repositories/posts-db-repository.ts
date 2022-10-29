@@ -61,6 +61,14 @@ class PostRepositoryModel {
 	public async deleteAllBPosts(): Promise<void> {
 		await postsCollection.deleteMany({})
 	}
+
+	public async getAllPostsBlog(blogId: string):Promise<ApiTypes.IPost[] | null>{
+		try {
+			return postsCollection.find({blogId}, {projection: {...defaultProjection}}).toArray();
+		} catch (error) {
+			return null;
+		}
+	}
 }
 
 export const PostsRepository = new PostRepositoryModel();

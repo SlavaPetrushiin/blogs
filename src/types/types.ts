@@ -31,4 +31,10 @@ export namespace ApiTypes {
 		content: string;
 		blogId: string;
 	}
+
+	export interface IBlogPost{
+		title: string;
+		shortDescription: string;
+		content: string;
+	}
 }

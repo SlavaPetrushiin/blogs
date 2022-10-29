@@ -1,52 +1,88 @@
+import { QueryRepository } from './../repositories/query-db-repository';
+import { IQueryBlogsAndPosts } from './../utils/checkQueryPostsAndBlogs';
 import { PostService } from './../services/posts_service';
-import { createAndUpdateBlogValidator } from './../validators/blogsValidator';
+import { createAndUpdateBlogValidator, checkBlogValidator, isExistsBlogValidator } from './../validators/blogsValidator';
 import { checkAuth } from './../utils/checkAuth';
-import express, {Request, Response} from 'express';
+import express, { Request, Response } from 'express';
 import { ApiTypes } from '../types/types';
 import { checkError } from '../utils/checkError';
-import { PostsRepository } from '../repositories/posts-db-repository';
 import { BlogsService } from '../services/blogs_service';
+import { checkQueryPostsAndBlogs } from '../utils/checkQueryPostsAndBlogs';
 
 export const routerBlogs = express.Router();
 
-routerBlogs.get('/', async (req: Request, res: Response) => {
-	let blogs = await BlogsService.getAllBlogs();
+routerBlogs.get('/', checkQueryPostsAndBlogs, async (req: Request<{}, {}, {}, IQueryBlogsAndPosts>, res: Response) => {
+	let { searchNameTerm, pageNumber, pageSize, sortBy, sortDirection } = req.query;
+	let blogs = await QueryRepository.getAllBlogs({
+		searchNameTerm: searchNameTerm!,
+		pageNumber: pageNumber!,
+		pageSize: pageSize!,
+		sortBy: sortBy!,
+		sortDirection: sortDirection!
+	});
 	res.send(blogs);
 })
 
 routerBlogs.post('/', checkAuth, createAndUpdateBlogValidator, checkError, async (req: Request<{}, {}, ApiTypes.ParamsCreateAndUpdateBlog>, res: Response<ApiTypes.IBlog | boolean>) => {
-	let {name, youtubeUrl} = req.body;
+	let { name, youtubeUrl } = req.body;
 	let newBlog = await BlogsService.createBlog(name, youtubeUrl);
 	if (!newBlog) return res.sendStatus(400);
 	return res.status(201).send(newBlog);
 })
 
-routerBlogs.get('/:id', async (req: Request<{id: string}>, res: Response) => {
+routerBlogs.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
 	let id = req.params.id;
 	let blog = await BlogsService.getOneBlog(id);
-	if(!blog){
+	if (!blog) {
 		return res.sendStatus(404);
 	}
 
 	return res.send(blog);
 })
 
-routerBlogs.put('/:id', checkAuth, createAndUpdateBlogValidator, checkError, async (req: Request<{id: string}, {}, ApiTypes.ParamsCreateAndUpdateBlog>, res: Response) => {
-	let {name, youtubeUrl, createdAt} = req.body;
-	let {id} = req.params;
-	let isUpdatedBlog = await BlogsService.updateBlog({id, name, youtubeUrl, createdAt});
-	if(!isUpdatedBlog){
+routerBlogs.get('/:id/posts', isExistsBlogValidator, checkError, checkQueryPostsAndBlogs, async (req: Request<{ id: string }>, res: Response) => {
+	let id = req.params.id;
+	let { pageNumber, pageSize, sortBy, sortDirection } = req.query;
+	let posts = await QueryRepository.getAllPostsInBlog(id, {
+		pageNumber: +pageNumber!,
+		pageSize: +pageSize!,
+		sortBy: sortBy! as string,
+		sortDirection: sortDirection! as string
+	});
+	if (!posts) {
+		return res.sendStatus(404);
+	}
+
+	return res.send(posts);
+})
+
+routerBlogs.post('/:id/posts', checkAuth, checkBlogValidator, checkError, async (req: Request<{ id: string }, {}, ApiTypes.IBlogPost>, res: Response) => {
+	let id = req.params.id;
+	let { content, shortDescription, title } = req.body;
+	let newPost = await PostService.createPost({ blogId: id, content, shortDescription, title });
+
+	if (!newPost) {
+		return res.sendStatus(404);
+	}
+	res.status(201).send(newPost);
+})
+
+routerBlogs.put('/:id', checkAuth, createAndUpdateBlogValidator, checkError, async (req: Request<{ id: string }, {}, ApiTypes.ParamsCreateAndUpdateBlog>, res: Response) => {
+	let { name, youtubeUrl, createdAt } = req.body;
+	let { id } = req.params;
+	let isUpdatedBlog = await BlogsService.updateBlog({ id, name, youtubeUrl, createdAt });
+	if (!isUpdatedBlog) {
 		return res.sendStatus(404);
 	}
 
 	res.sendStatus(204);
 })
 
-routerBlogs.delete('/:id', checkAuth, async (req: Request<{id: string}>, res: Response) => {
-	let {id} = req.params;
+routerBlogs.delete('/:id', checkAuth, async (req: Request<{ id: string }>, res: Response) => {
+	let { id } = req.params;
 	let isDeletesBlog = await BlogsService.deleteBlog(id);
-	if(!isDeletesBlog){
-		return res.sendStatus(404); 
+	if (!isDeletesBlog) {
+		return res.sendStatus(404);
 	}
 
 	PostService.removeAllPostsAndBlog(id);

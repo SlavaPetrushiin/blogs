@@ -1,9 +1,15 @@
 import { ApiTypes } from "../types/types";
 import { blogsCollection } from "./db";
 class BlogsRepositoryModel {
-	public async getAllBlogs(): Promise<ApiTypes.IBlog[] | null> {
+	public async getAllBlogs(searchNameTerm: string, sortBy: string): Promise<ApiTypes.IBlog[] | null> {
 		try {
-			return blogsCollection.find({}, {projection: {_id: false}}).toArray();
+			return blogsCollection.find({
+				name: { $regex: searchNameTerm, $options: "$i" },
+			}, {
+				projection: { _id: false }
+			})
+			.sort({[sortBy]: 1})
+			.toArray();
 		} catch (error) {
 			console.error(error);
 			return null;
@@ -12,10 +18,10 @@ class BlogsRepositoryModel {
 
 	public async getOneBlog(id: string): Promise<ApiTypes.IBlog | null> {
 		try {
-			const foundedBlog = await blogsCollection.findOne({id}, {projection: {_id: false}});
+			const foundedBlog = await blogsCollection.findOne({ id }, { projection: { _id: false } });
 
 			if (!foundedBlog) return null
-	
+
 			return foundedBlog;
 		} catch (error) {
 			console.error(error);
@@ -23,26 +29,26 @@ class BlogsRepositoryModel {
 		}
 	}
 
-	public async createBlog(blog: ApiTypes.IBlog ): Promise<boolean> {
+	public async createBlog(blog: ApiTypes.IBlog): Promise<boolean> {
 		try {
 			let result = await blogsCollection.insertOne(blog);
-			return result.acknowledged;			
+			return result.acknowledged;
 		} catch (error) {
 			console.error(error);
 			return false;
 		}
 	}
 
-	public async updateBlog(blog: ApiTypes.IBlog ): Promise<boolean> {
+	public async updateBlog(blog: ApiTypes.IBlog): Promise<boolean> {
 		try {
-			let {id, name, youtubeUrl} = blog;
-			let result = await blogsCollection.updateOne({id}, {
-				$set: {name,  youtubeUrl}
+			let { id, name, youtubeUrl } = blog;
+			let result = await blogsCollection.updateOne({ id }, {
+				$set: { name, youtubeUrl }
 			});
-	
+
 			if (result.matchedCount == 0) {
 				return false;
-			}	
+			}
 			return true;
 		} catch (error) {
 			console.error(error);
@@ -52,7 +58,7 @@ class BlogsRepositoryModel {
 
 	public async deleteBlog(id: string): Promise<boolean> {
 		try {
-			let res = await blogsCollection.deleteOne({id});
+			let res = await blogsCollection.deleteOne({ id });
 			return res.deletedCount > 0 ? true : false;
 		} catch (error) {
 			console.error(error);
@@ -60,7 +66,7 @@ class BlogsRepositoryModel {
 		}
 	}
 
-	public async deleteAllBlogs(): Promise<boolean>{
+	public async deleteAllBlogs(): Promise<boolean> {
 		try {
 			let result = await blogsCollection.deleteMany({});
 			return result.acknowledged ? true : false;

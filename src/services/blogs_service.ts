@@ -1,9 +1,10 @@
+import { PostsRepository } from './../repositories/posts-db-repository';
 import { BlogsRepository } from './../repositories/blogs-db-repository';
 import { ApiTypes } from "../types/types";
 
 export class BlogsService {
-	static async getAllBlogs(): Promise<ApiTypes.IBlog[] | null> {
-		return await BlogsRepository.getAllBlogs();
+	static async getAllBlogs(searchNameTerm:string, sortBy: string): Promise<ApiTypes.IBlog[] | null> {
+		return await BlogsRepository.getAllBlogs(searchNameTerm, sortBy);
 	}
 
 	static async getOneBlog(id: string): Promise<ApiTypes.IBlog | null> {
@@ -38,5 +39,20 @@ export class BlogsService {
 
 	static async deleteAllBlogs(): Promise<boolean>{
 		return BlogsRepository.deleteAllBlogs();
+	}
+
+	static async getAllPostsBlog(id: string): Promise<ApiTypes.IPost[] | null> {
+		try {
+			let foundedBlog = await BlogsRepository.getOneBlog(id);
+			if(!foundedBlog){
+				return null;
+			}
+	
+			return await PostsRepository.getAllPostsBlog(foundedBlog.id);
+			
+		} catch (error) {
+			return null
+		}
+
 	}
 }
