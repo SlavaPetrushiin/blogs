@@ -20,28 +20,38 @@ export class QueryRepository {
 		try {
 			let { searchNameTerm, pageNumber, pageSize, sortBy, sortDirection } = params;
 			let skip = (pageNumber - 1) * pageSize;
+			let totalCount = await blogsCollection.countDocuments({ name: { $regex: searchNameTerm, $options: "$i" } });
+			let pageCount = Math.ceil(totalCount / pageSize);
 
-			return blogsCollection.find(
+			let result = await  blogsCollection.find(
 				{ name: { $regex: searchNameTerm, $options: "$i" } },
 				{ projection: { _id: false } }
 			)
-				.sort({ [sortBy]: sortDirection == "asc" ? 1 : -1 })
 				.skip(+skip)
 				.limit(+pageSize)
+				.sort({ [sortBy]: sortDirection == "asc" ? 1 : -1 })
 				.toArray();
+
+			return {
+				"pagesCount": pageCount,
+				"page": pageNumber,
+				"pageSize": pageSize,
+				"totalCount": totalCount,
+				"items": result					
+			}		
 
 		} catch (error) {
 			console.log("Error: ", error);
 		}
 	}
 
-	static async getAllPostsInBlog(blogId: string, queries: IReqAllPosts){
+	static async getAllPostsInBlog(blogId: string, queries: IReqAllPosts) {
 		try {
 			let { pageNumber, pageSize, sortBy, sortDirection } = queries;
 			let skip = (pageNumber - 1) * pageSize;
 			console.log(blogId);
 			return postsCollection.find(
-				{blogId},
+				{ blogId },
 				{ projection: { _id: false } }
 			)
 				.sort({ [sortBy]: sortDirection == "asc" ? 1 : -1 })

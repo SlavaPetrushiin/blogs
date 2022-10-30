@@ -39,7 +39,7 @@ routerBlogs.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
 	return res.send(blog);
 })
 
-routerBlogs.get('/:id/posts', isExistsBlogValidator, checkErrorNotFound, checkQueryPostsAndBlogs, async (req: Request<{ id: string }>, res: Response) => {
+routerBlogs.get('/:id/posts', checkAuth, isExistsBlogValidator, checkErrorNotFound, checkQueryPostsAndBlogs, async (req: Request<{ id: string }>, res: Response) => {
 	let id = req.params.id;
 	let { pageNumber, pageSize, sortBy, sortDirection } = req.query;
 	let posts = await QueryRepository.getAllPostsInBlog(id, {
