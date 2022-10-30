@@ -4,7 +4,7 @@ import { createAndUpdateBlogValidator, checkBlogValidator, isExistsBlogValidator
 import { checkAuth } from './../utils/checkAuth';
 import express, { Request, Response } from 'express';
 import { ApiTypes } from '../types/types';
-import { checkError, checkErrorТNotFound } from '../utils/checkError';
+import { checkError, checkErrorNotFound } from '../utils/checkError';
 import { BlogsService } from '../services/blogs_service';
 import { checkQueryPostsAndBlogs, IQueryBlogsAndPosts } from '../utils/checkQueryPostsAndBlogs';
 
@@ -39,7 +39,7 @@ routerBlogs.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
 	return res.send(blog);
 })
 
-routerBlogs.get('/:id/posts', isExistsBlogValidator, checkErrorТNotFound, checkQueryPostsAndBlogs, async (req: Request<{ id: string }>, res: Response) => {
+routerBlogs.get('/:id/posts', isExistsBlogValidator, checkErrorNotFound, checkQueryPostsAndBlogs, async (req: Request<{ id: string }>, res: Response) => {
 	let id = req.params.id;
 	let { pageNumber, pageSize, sortBy, sortDirection } = req.query;
 	let posts = await QueryRepository.getAllPostsInBlog(id, {
