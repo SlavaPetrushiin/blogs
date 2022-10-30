@@ -4,12 +4,22 @@ import { ApiTypes } from '../types/types';
 import { checkError } from '../utils/checkError';
 import { createAndUpdatePostsValidator } from '../validators/postsValidator';
 import { PostService } from '../services/posts_service';
+import { checkQueryPostsAndBlogs, IQueryBlogsAndPosts } from '../utils/checkQueryPostsAndBlogs';
+import { QueryRepository } from '../repositories/query-db-repository';
 
 
 export const routerPosts = express.Router();
 
-routerPosts.get('/', async (req: Request, res: Response) => {
-	let posts = await PostService.getAllPosts();
+routerPosts.get('/', checkQueryPostsAndBlogs,  async (req: Request<{}, {}, {}, IQueryBlogsAndPosts>, res: Response) => {
+	let {  pageNumber, pageSize, sortBy, sortDirection } = req.query;
+	let posts = await QueryRepository.getAllPosts({
+		pageNumber: pageNumber!,
+		pageSize: pageSize!,
+		sortBy: sortBy!,
+		sortDirection: sortDirection!
+	});
+	
+	//let posts = await PostService.getAllPosts();
 	res.send(posts);
 })
 

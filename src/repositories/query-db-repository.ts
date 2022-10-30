@@ -31,7 +31,7 @@ export class QueryRepository {
 				.toArray();
 
 		} catch (error) {
-			console.log("FUKKKKK: ", error);
+			console.log("Error: ", error);
 		}
 	}
 
@@ -50,7 +50,7 @@ export class QueryRepository {
 				.toArray();
 
 		} catch (error) {
-			console.log("FUKKKKK: ", error);
+			console.log("Error: ", error);
 		}
 	}
 
@@ -68,7 +68,7 @@ export class QueryRepository {
 				.toArray();
 
 		} catch (error) {
-			console.log("FUKKKKK: ", error);
+			console.log("Error: ", error);
 		}
 
 	}

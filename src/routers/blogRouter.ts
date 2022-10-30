@@ -1,5 +1,4 @@
 import { QueryRepository } from './../repositories/query-db-repository';
-import { IQueryBlogsAndPosts } from './../utils/checkQueryPostsAndBlogs';
 import { PostService } from './../services/posts_service';
 import { createAndUpdateBlogValidator, checkBlogValidator, isExistsBlogValidator } from './../validators/blogsValidator';
 import { checkAuth } from './../utils/checkAuth';
@@ -7,7 +6,7 @@ import express, { Request, Response } from 'express';
 import { ApiTypes } from '../types/types';
 import { checkError, checkErrorТNotFound } from '../utils/checkError';
 import { BlogsService } from '../services/blogs_service';
-import { checkQueryPostsAndBlogs } from '../utils/checkQueryPostsAndBlogs';
+import { checkQueryPostsAndBlogs, IQueryBlogsAndPosts } from '../utils/checkQueryPostsAndBlogs';
 
 export const routerBlogs = express.Router();
 
