@@ -81,7 +81,7 @@ export class QueryRepository {
 			let { pageNumber, pageSize, sortBy, sortDirection } = params;
 			let skip = (pageNumber - 1) * pageSize;
 
-			let result = postsCollection.find(
+			let result = await postsCollection.find(
 				{ projection: { _id: false } }
 			)
 				.skip(+skip)
