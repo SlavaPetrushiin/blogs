@@ -21,10 +21,8 @@ export class QueryRepository {
 		try {
 			let { searchNameTerm, pageNumber, pageSize, sortBy, sortDirection } = params;
 			let skip = (pageNumber - 1) * pageSize;
-			let totalCount = await blogsCollection.countDocuments({ name: { $regex: searchNameTerm, $options: "$i" } });
-			let pageCount = Math.ceil(totalCount / pageSize);
 
-			let result = await  blogsCollection.find(
+			let result = await blogsCollection.find(
 				{ name: { $regex: searchNameTerm, $options: "$i" } },
 				{ projection: { _id: false } }
 			)
@@ -33,13 +31,16 @@ export class QueryRepository {
 				.sort({ [sortBy]: sortDirection == "asc" ? 1 : -1 })
 				.toArray();
 
+			let totalCount = await blogsCollection.countDocuments({ name: { $regex: searchNameTerm, $options: "$i" } });
+			let pageCount = Math.ceil(totalCount / pageSize);
+
 			return {
 				pagesCount: pageCount,
 				page: pageNumber,
 				pageSize: pageSize,
 				totalCount: totalCount,
-				items: result					
-			}		
+				items: result
+			}
 
 		} catch (error) {
 			console.log("Error: ", error);
@@ -50,8 +51,6 @@ export class QueryRepository {
 		try {
 			let { pageNumber, pageSize, sortBy, sortDirection } = queries;
 			let skip = (pageNumber - 1) * pageSize;
-			let totalCount = await postsCollection.countDocuments({ blogId });
-			let pageCount = Math.ceil(totalCount / pageSize);
 
 			let result = await postsCollection.find(
 				{ blogId },
@@ -62,13 +61,16 @@ export class QueryRepository {
 				.sort({ [sortBy]: sortDirection == "asc" ? 1 : -1 })
 				.toArray();
 
-				return {
-					pagesCount: pageCount,
-					page: pageNumber,
-					pageSize: pageSize,
-					totalCount: totalCount,
-					items: result					
-				}
+			let totalCount = await postsCollection.countDocuments({ blogId });
+			let pageCount = Math.ceil(totalCount / pageSize);
+
+			return {
+				pagesCount: pageCount,
+				page: pageNumber,
+				pageSize: pageSize,
+				totalCount: totalCount,
+				items: result
+			}
 		} catch (error) {
 			console.log("Error: ", error);
 		}
@@ -78,10 +80,8 @@ export class QueryRepository {
 		try {
 			let { pageNumber, pageSize, sortBy, sortDirection } = params;
 			let skip = (pageNumber - 1) * pageSize;
-			let totalCount = await postsCollection.countDocuments();
-			let pageCount = Math.ceil(totalCount / pageSize);
 
-			let result =  postsCollection.find(
+			let result = postsCollection.find(
 				{ projection: { _id: false } }
 			)
 				.skip(+skip)
@@ -89,13 +89,16 @@ export class QueryRepository {
 				.sort({ [sortBy]: sortDirection == "asc" ? 1 : -1 })
 				.toArray();
 
-				return {
-					pagesCount: pageCount,
-					page: pageNumber,
-					pageSize: pageSize,
-					totalCount: totalCount,
-					items: result					
-				}
+			let totalCount = await postsCollection.countDocuments();
+			let pageCount = Math.ceil(totalCount / pageSize);
+
+			return {
+				pagesCount: pageCount,
+				page: pageNumber,
+				pageSize: pageSize,
+				totalCount: totalCount,
+				items: result
+			}
 		} catch (error) {
 			console.log("Error: ", error);
 		}
