@@ -1,3 +1,4 @@
+import { BlogsRepository } from './blogs-db-repository';
 import { blogsCollection, postsCollection } from "./db";
 
 interface IReqAllBlogs {

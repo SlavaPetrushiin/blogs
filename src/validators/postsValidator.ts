@@ -4,6 +4,7 @@ import { BlogsService } from '../services/blogs_service';
 export const checkBlogID: CustomValidator = async (blogId: string) =>{
 	let foundedBlog = await BlogsService.getOneBlog(blogId);
 	if(!foundedBlog){
+		console.log("ERROR");
 		return Promise.reject();
 	}
 }

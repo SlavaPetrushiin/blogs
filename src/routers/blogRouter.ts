@@ -7,6 +7,7 @@ import { ApiTypes } from '../types/types';
 import { checkError, checkErrorNotFound } from '../utils/checkError';
 import { BlogsService } from '../services/blogs_service';
 import { checkQueryPostsAndBlogs, IQueryBlogsAndPosts } from '../utils/checkQueryPostsAndBlogs';
+import { BlogsRepository } from '../repositories/blogs-db-repository';
 
 export const routerBlogs = express.Router();
 
@@ -39,8 +40,11 @@ routerBlogs.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
 	return res.send(blog);
 })
 
-routerBlogs.get('/:id/posts', checkAuth, isExistsBlogValidator, checkErrorNotFound, checkQueryPostsAndBlogs, async (req: Request<{ id: string }>, res: Response) => {
+routerBlogs.get('/:id/posts', checkAuth, checkQueryPostsAndBlogs, async (req: Request<{ id: string }>, res: Response) => {
 	let id = req.params.id;
+	let blog = await BlogsRepository.getOneBlog(id);
+	if(!blog) return res.sendStatus(404);
+
 	let { pageNumber, pageSize, sortBy, sortDirection } = req.query;
 	let posts = await QueryRepository.getAllPostsInBlog(id, {
 		pageNumber: +pageNumber!,

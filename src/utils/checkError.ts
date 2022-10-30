@@ -13,6 +13,7 @@ export const checkError = (req: Request, res: Response, next: NextFunction) => {
 export const checkErrorNotFound = (req: Request, res: Response, next: NextFunction) => {
 	const result = validationResult(req);
 	if (!result.isEmpty()) {
+		console.log(result);
 		return res.sendStatus(404);
 	}
 	next();
