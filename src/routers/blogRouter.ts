@@ -40,7 +40,7 @@ routerBlogs.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
 	return res.send(blog);
 })
 
-routerBlogs.get('/:id/posts', checkAuth, checkQueryPostsAndBlogs, async (req: Request<{ id: string }>, res: Response) => {
+routerBlogs.get('/:id/posts', checkQueryPostsAndBlogs, async (req: Request<{ id: string }, {}, {}, IQueryBlogsAndPosts>, res: Response) => {
 	let id = req.params.id;
 	let blog = await BlogsRepository.getOneBlog(id);
 	if(!blog) return res.sendStatus(404);
@@ -61,6 +61,9 @@ routerBlogs.get('/:id/posts', checkAuth, checkQueryPostsAndBlogs, async (req: Re
 
 routerBlogs.post('/:id/posts', checkAuth, checkBlogValidator, checkError, async (req: Request<{ id: string }, {}, ApiTypes.IBlogPost>, res: Response) => {
 	let id = req.params.id;
+	let blog = await BlogsRepository.getOneBlog(id);
+	if(!blog) return res.sendStatus(404);
+	
 	let { content, shortDescription, title } = req.body;
 	let newPost = await PostService.createPost({ blogId: id, content, shortDescription, title });
 
