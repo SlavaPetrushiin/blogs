@@ -34,11 +34,11 @@ export class QueryRepository {
 				.toArray();
 
 			return {
-				"pagesCount": pageCount,
-				"page": pageNumber,
-				"pageSize": pageSize,
-				"totalCount": totalCount,
-				"items": result					
+				pagesCount: pageCount,
+				page: pageNumber,
+				pageSize: pageSize,
+				totalCount: totalCount,
+				items: result					
 			}		
 
 		} catch (error) {
@@ -63,11 +63,11 @@ export class QueryRepository {
 				.toArray();
 
 				return {
-					"pagesCount": pageCount,
-					"page": pageNumber,
-					"pageSize": pageSize,
-					"totalCount": totalCount,
-					"items": result					
+					pagesCount: pageCount,
+					page: pageNumber,
+					pageSize: pageSize,
+					totalCount: totalCount,
+					items: result					
 				}
 		} catch (error) {
 			console.log("Error: ", error);
@@ -90,11 +90,11 @@ export class QueryRepository {
 				.toArray();
 
 				return {
-					"pagesCount": pageCount,
-					"page": pageNumber,
-					"pageSize": pageSize,
-					"totalCount": totalCount,
-					"items": result					
+					pagesCount: pageCount,
+					page: pageNumber,
+					pageSize: pageSize,
+					totalCount: totalCount,
+					items: result					
 				}
 		} catch (error) {
 			console.log("Error: ", error);
