@@ -4,7 +4,7 @@ import { createAndUpdateBlogValidator, checkBlogValidator, isExistsBlogValidator
 import { checkAuth } from './../utils/checkAuth';
 import express, { Request, Response } from 'express';
 import { ApiTypes } from '../types/types';
-import { checkError, checkErrorNotFound } from '../utils/checkError';
+import { checkError } from '../utils/checkError';
 import { BlogsService } from '../services/blogs_service';
 import { checkQueryPostsAndBlogs, IQueryBlogsAndPosts } from '../utils/checkQueryPostsAndBlogs';
 import { BlogsRepository } from '../repositories/blogs-db-repository';
@@ -63,7 +63,7 @@ routerBlogs.post('/:id/posts', checkAuth, checkBlogValidator, checkError, async 
 	let id = req.params.id;
 	let blog = await BlogsRepository.getOneBlog(id);
 	if(!blog) return res.sendStatus(404);
-	
+
 	let { content, shortDescription, title } = req.body;
 	let newPost = await PostService.createPost({ blogId: id, content, shortDescription, title });
 
