@@ -54,9 +54,9 @@ export class QueryRepository {
 				{ blogId },
 				{ projection: { _id: false } }
 			)
-				.sort({ [sortBy]: sortDirection == "asc" ? 1 : -1 })
 				.skip(+skip)
 				.limit(+pageSize)
+				.sort({ [sortBy]: sortDirection == "asc" ? 1 : -1 })
 				.toArray();
 
 		} catch (error) {
@@ -72,9 +72,9 @@ export class QueryRepository {
 			return postsCollection.find(
 				{ projection: { _id: false } }
 			)
-				.sort({ [sortBy]: sortDirection == "asc" ? 1 : -1 })
 				.skip(+skip)
 				.limit(+pageSize)
+				.sort({ [sortBy]: sortDirection == "asc" ? 1 : -1 })
 				.toArray();
 
 		} catch (error) {
