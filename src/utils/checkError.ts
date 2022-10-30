@@ -9,3 +9,11 @@ export const checkError = (req: Request, res: Response, next: NextFunction) => {
 	}
 	next();
 }
+
+export const checkErrorТNotFound = (req: Request, res: Response, next: NextFunction) => {
+	const result = validationResult(req);
+	if (!result.isEmpty()) {
+		return res.status(404);
+	}
+	next();
+}
