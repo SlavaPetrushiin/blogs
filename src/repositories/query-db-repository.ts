@@ -66,8 +66,8 @@ export class QueryRepository {
 
 			return {
 				pagesCount: pageCount,
-				page: pageNumber,
-				pageSize: pageSize,
+				page: +pageNumber,
+				pageSize: +pageSize,
 				totalCount: totalCount,
 				items: result
 			}
@@ -94,8 +94,8 @@ export class QueryRepository {
 
 			return {
 				pagesCount: pageCount,
-				page: pageNumber,
-				pageSize: pageSize,
+				page: +pageNumber,
+				pageSize: +pageSize,
 				totalCount: totalCount,
 				items: result
 			}
